@@ -1,0 +1,90 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "backend/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        deno: [1.19.0]
+    name: Test Backend
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup Deno
+        uses: denolib/setup-deno@master
+        with:
+          deno-version: ${{ matrix.deno }}
+
+      - name: Print deno version
+        run: deno --version
+
+      - name: Run backend tests with import map
+        run: deno test --allow-all --import-map=./tests/importmap.json
+      
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Environment Variables
+        run: |
+          IMG=p2p-backend
+          echo "BUILD_VER=1.0.$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+          echo "IMG=${IMG}" >> $GITHUB_ENV
+          echo "IMAGE=ghcr.io/${{ github.repository_owner }}/${IMG}" >> $GITHUB_ENV
+          echo "name=BUILD_DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          echo "GIT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+          echo "GIT_REF=$(git symbolic-ref -q --short HEAD || git describe --tags --exact-match)" >> $GITHUB_ENV
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build container image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ env.GIT_REF }}
+            ${{ env.IMAGE }}:${{ env.GIT_SHA }}
+            ${{ env.IMAGE }}:${{ env.BUILD_VER }}
+      
+
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          HOST: ${{ secrets.SSH_HOST }}
+          USERNAME: ${{ secrets.SSH_USERNAME }}
+          PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          PORT: ${{ secrets.SSH_PORT }}
+          script: |
+            # Login to ghcr
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S \
+            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+            # Pull the new image from ghcr
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S \
+            docker pull ghcr.io/${{ github.repository_owner }}/p2p-backend:latest
+            # Replace the container and inject env variables
+            docker-compose -f ./hosting/docker-compose.yml --env-file ./hosting/.env up -d --no-deps plant-exchange-backend
