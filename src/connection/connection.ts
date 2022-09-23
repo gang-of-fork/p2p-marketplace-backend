@@ -1,0 +1,13 @@
+import { MongoClient } from "https://deno.land/x/mongo@v0.29.2/mod.ts";
+import "https://deno.land/x/dotenv@v3.2.0/load.ts"; //load env
+export default class Connection {
+    private static client: MongoClient;
+
+    public static async getClient() {
+        if(!Connection.client) {
+            Connection.client = await new MongoClient();
+            await Connection.client.connect(Deno.env.get("DB_URL") as string)
+        }
+        return Connection.client;
+    }
+}
