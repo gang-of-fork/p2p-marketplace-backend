@@ -82,6 +82,9 @@ export default class AuthController {
         } catch(e) {
             return next({ statusCode: 500, msg: e.toString() });
         }
+        //ggf. reworken da sonst durch DDOS Attacken auf Adressen das einloggen geblockt 
+        //werden kann (so schnell anfragen, dass der echt Nutzer nicht einloggen kann bevor
+        //die nonce aktualisiert wird)
         finally {
             try{
                 User.updateOne({publicAddress: publicAddress}, {$set:{nonce: Math.floor(Math.random() * 10000)}})

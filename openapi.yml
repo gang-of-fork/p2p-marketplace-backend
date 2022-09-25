@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Swagger Petstore - OpenAPI 3.0
+  title: PlantExchange - Gang of Fork
   description: |-
     This is the first version of the API running the PlantExchange anonymous crypto-currency marketplace.
     It will be rebuilt decentralized in the first half of 2023.
@@ -33,7 +33,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/authUser'
+              $ref: '#/components/schemas/registerUser'
         required: true
       responses:
         '201':
@@ -50,20 +50,28 @@ paths:
            application/json:
               schema:
                 $ref: '#/components/schemas/error'
-  /auth/login:
+  /auth/login/{publicAddress}:
     get:
       tags:
         - auth
       summary: Get Nonce for Login Process
       description: Get the nonce, that needs to be signed by Metamask for the authentication process
       operationId: getLogin
+      parameters:
+          - in: path
+            name: publicAddress
+            schema:
+              type: string
+              format: hex
+            required: true
+          
       responses:
         '200':
           description: Basic User Info
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/authUser'
+                $ref: '#/components/schemas/registerUser'
         '400':
           description: Invalid input
           content:
@@ -76,20 +84,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+  /auth/login:
+    post:
+      # move when needed
+      #security:
+      #  - bearerJWT: []
+      tags:
+        - auth
+      summary: Register a new user
+      description: Add a new user to the user collection
+      operationId: postLogin
+      requestBody:
+        description: Login a user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+        required: true
+      responses:
+        '200':
+          description: Login Successful
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  jwt: 
+                    type: string
+                    format: JWT
+                  
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Signature authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Internal Server Error
+          content:
+           application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 components:
   schemas:
     User:
-      allOf:
-        - $ref: '#/components/schemas/authUser'
-        - type: object
-          properties:
-            nonce:
-              type: integer
-              example: 1234
-              readOnly: true
-        
-        
-    authUser:
       type: object
       properties:
         id:
@@ -100,6 +144,27 @@ components:
         publicAddress:
           type: string
           format: Metamask Wallet Address
+        nonce:
+          type: integer
+          example: 1234
+          readOnly: true
+        
+    registerUser:
+      type: object
+      properties:
+        publicAddress:
+          type: string
+          format: Metamask Wallet Address
+          
+    loginUser:
+      type: object
+      properties:
+        publicAddress:
+          type: string
+          format: hex
+        signature:
+          type: string
+          format: hex
           
     error:
       type: object
