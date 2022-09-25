@@ -1,0 +1,26 @@
+name: build-docs
+
+on: 
+  push:
+    branches:
+    - main
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate Swagger UI
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: docs
+          spec-file: openapi.yml
+      - name: push docs build artifact
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: docs
+          FOLDER: docs
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MESSAGE: "Docs: ({sha}) {msg}"
