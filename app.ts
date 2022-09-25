@@ -4,6 +4,8 @@ import { opineCors } from "https://deno.land/x/cors@v1.2.1/mod.ts";
 import "https://deno.land/x/dotenv@v3.2.0/load.ts"; //load env
 import Routes from './src/routes/routes.ts';
 import errorMiddleware from "./src/middleware/errorMiddleware.ts";
+
+
 const port = parseInt(Deno.env.get("PORT") as string);
 const db_uri = Deno.env.get("DB_URL") as string;
 

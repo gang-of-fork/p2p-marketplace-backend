@@ -11,4 +11,5 @@ router.get("/ping", (_req: OpineRequest, res: OpineResponse) => {
 
 router.post("/auth/register", AuthController.registerUser)
 router.get("/auth/login/:publicAddress", AuthController.getUserForLogin)
+router.post("/auth/login", AuthController.postLogin)
 export default router;
