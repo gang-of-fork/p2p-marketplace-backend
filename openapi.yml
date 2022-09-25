@@ -27,13 +27,13 @@ paths:
         - auth
       summary: Register a new user
       description: Add a new user to the user collection
-      operationId: postAuth
+      operationId: postRegister
       requestBody:
         description: Register a new user
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/registerUser'
+              $ref: '#/components/schemas/authUser'
         required: true
       responses:
         '201':
@@ -43,31 +43,44 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: number
-                    format: HTTP-Statuscode
-                  msg: 
-                    type: string
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Internal Server Error
+          content:
+           application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /auth/login:
+    get:
+      tags:
+        - auth
+      summary: Get Nonce for Login Process
+      description: Get the nonce, that needs to be signed by Metamask for the authentication process
+      operationId: getLogin
+      responses:
+        '200':
+          description: Basic User Info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authUser'
+        '400':
+          description: Invalid input
+          content:
+           application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: number
-                    format: HTTP-Statuscode
-                  msg: 
-                    type: string
-      
+                $ref: '#/components/schemas/error'
 components:
   schemas:
     User:
       allOf:
-        - $ref: '#/components/schemas/registerUser'
+        - $ref: '#/components/schemas/authUser'
         - type: object
           properties:
             nonce:
@@ -76,7 +89,7 @@ components:
               readOnly: true
         
         
-    registerUser:
+    authUser:
       type: object
       properties:
         id:
@@ -87,11 +100,21 @@ components:
         publicAddress:
           type: string
           format: Metamask Wallet Address
+          
+    error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          format: HTTP-Statuscode
+        msg: 
+          type: string
   securitySchemes:
     bearerJWT:            # arbitrary name for the security scheme
       type: http
       scheme: bearer
       bearerFormat: JWT  
+    
       
 security:
   - bearerJWT: [] 
