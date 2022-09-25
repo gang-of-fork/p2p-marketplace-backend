@@ -9,5 +9,5 @@ router.get("/ping", (_req: OpineRequest, res: OpineResponse) => {
 
 
 
-router.post("/register", AuthController.registerUser)
+router.post("/auth/register", AuthController.registerUser)
 export default router;

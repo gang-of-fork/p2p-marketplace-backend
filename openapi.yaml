@@ -1,0 +1,100 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: |-
+    This is the first version of the API running the PlantExchange anonymous crypto-currency marketplace.
+    It will be rebuilt decentralized in the first half of 2023.
+    Learn more about this application by clicking on the links below.
+    
+  contact:
+    email: mail@gang-of-fork.de
+  version: 0.0.1
+externalDocs:
+  description: Find out more about this application
+  url: https://plantexchange.gang-of-fork.de
+servers:
+  - url: https://api.plantexchange.gang-of-fork.de/api/v1
+tags:
+  - name: auth
+    description: Everything about registration and authentication
+paths:
+  /auth/register:
+    post:
+      # move when needed
+      #security:
+      #  - bearerJWT: []
+      tags:
+        - auth
+      summary: Register a new user
+      description: Add a new user to the user collection
+      operationId: postAuth
+      requestBody:
+        description: Register a new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerUser'
+        required: true
+      responses:
+        '201':
+          description: User was created successfully
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    format: HTTP-Statuscode
+                  msg: 
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    format: HTTP-Statuscode
+                  msg: 
+                    type: string
+      
+components:
+  schemas:
+    User:
+      allOf:
+        - $ref: '#/components/schemas/registerUser'
+        - type: object
+          properties:
+            nonce:
+              type: integer
+              example: 1234
+              readOnly: true
+        
+        
+    registerUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: Mongo ObjectId
+          example: 507f1f77bcf86cd799439011
+          readOnly: true
+        publicAddress:
+          type: string
+          format: Metamask Wallet Address
+  securitySchemes:
+    bearerJWT:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  
+      
+security:
+  - bearerJWT: [] 
+        
+
+    
