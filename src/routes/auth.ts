@@ -38,16 +38,19 @@ export default class AuthController {
                     nonce: 1,
                     _id: 0
                 }
-            })
-            if (!user) {
-                //remove message in prod for security reasons
-                return next({ statusCode: 400 , msg: "User not found"})
-            }
+            });
+
+            //remove message in prod for security reasons
+            if (!user) {return next({ statusCode: 400 , msg: "User not found"})}
+
             return res.json(user)
         }
         catch (e) {
             return next({ statusCode: 500, msg: e.toString() });
         }
+    }
 
+    static async postLogin(req: OpineRequest, res: OpineResponse, next: NextFunction) {
+        //TODO
     }
 }
