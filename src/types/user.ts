@@ -1,5 +1,15 @@
-export type User = {
+import { TNonce } from "./nonce.ts"
+
+export type TUser = {
     _id: string
     publicAddress: string,
-    nonce: number
+    nonceId: string
+}
+
+export type TUserLookup = {
+    _id: string
+    publicAddress: string,
+    nonceId: string
+    nonces: TNonce[]
+
 }
