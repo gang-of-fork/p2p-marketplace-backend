@@ -131,6 +131,18 @@ paths:
            application/json:
               schema:
                 $ref: '#/components/schemas/error'
+  
+  /offers:
+    get:
+
+    post:
+
+  /offers/{id}:
+    get:
+
+    delete:
+
+
 components:
   schemas:
     User:
@@ -148,7 +160,7 @@ components:
           type: integer
           example: 1234
           readOnly: true
-        
+
     registerUser:
       type: object
       properties:
@@ -165,6 +177,17 @@ components:
         signature:
           type: string
           format: hex
+    
+    Offer:
+      type: object
+      properties:
+        location:
+          type: array
+          minItems: 2
+          maxItems: 2
+          items:
+            type: number
+
           
     error:
       type: object
