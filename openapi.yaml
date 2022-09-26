@@ -17,6 +17,8 @@ servers:
 tags:
   - name: auth
     description: Everything about registration and authentication
+  - name: offers
+    description: Routes for offers
 paths:
   /auth/register:
     post:
@@ -134,14 +136,58 @@ paths:
   
   /offers:
     get:
-
+      summary: Get list of all offers
+      description: Get a List of all offers
+      responses:
+        200:
+          description: List of all offers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Offer'
+                  count:
+                    type: integer
     post:
-
-  /offers/{id}:
+      summary: Create a new offer
+      description: Create a new offer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Offer'
+      responses:
+        201:
+          description: offer created
+          
+  /offers/{offerId}:
+    parameters:
+      - in: path
+        name: offerId
+        required: true
+        schema:
+          type: string
     get:
+      summary: Get list of all offers
+      description: Get a List of all offers
+      responses:
+        200:
+          description: List of all offers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Offer'
 
     delete:
-
+      summary: Delete an offer
+      description: Delete an offer by id
+      responses:
+        201:
+          description: offer deleted
 
 components:
   schemas:
@@ -181,12 +227,24 @@ components:
     Offer:
       type: object
       properties:
+        _id:
+          type: string
+          readOnly: true
+        type:
+          type: string
+          enum: [ 'BUY', 'SELL' ]
         location:
           type: array
           minItems: 2
           maxItems: 2
           items:
             type: number
+        crypto:
+          type: string
+          enum: [ 'BTC', 'ETH', 'MON', 'CLT' ]
+        currency:
+          type: string
+          enum: [ 'GBP', 'USD', 'CAD', 'EUR' ]
 
           
     error:
