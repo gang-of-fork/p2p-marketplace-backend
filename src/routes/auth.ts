@@ -150,11 +150,9 @@ export default class AuthController {
         const value = Math.floor(Math.random() * 99999999) + "";
 
         //generate IV and save to database
-        const iv = new Uint8Array(16);
-        const td = new TextDecoder();
-        const ivString = td.decode(iv)
-
-        //iv = crypto.getRandomValues(iv)
+        let iv = new Uint8Array(16);
+        iv = crypto.getRandomValues(iv)
+        const ivString = encodeToString(iv)
         const ivId = await IV.insertOne({ value: ivString })
 
         //get encrpytion key
@@ -182,7 +180,7 @@ export default class AuthController {
      */
     static encrypt(plainData: string, ivString: string, keyString: string) {
         const te = new TextEncoder();
-        const iv = te.encode(ivString);
+        const iv = decodeString(ivString);
         const key = te.encode(keyString);
         const data = te.encode(plainData);
         const cipher = new Cbc(Aes, key, iv, Padding.PKCS7);
@@ -200,7 +198,7 @@ export default class AuthController {
     static decrypt(encryptedData: string, ivString: string, keyString: string) {
         const te = new TextEncoder();
         const td = new TextDecoder();
-        const iv = te.encode(ivString);
+        const iv = decodeString(ivString);
         const key = te.encode(keyString);
         const decipher = new Cbc(Aes, key, iv, Padding.PKCS7);
         const decrypted = decipher.decrypt(decodeString(encryptedData));
