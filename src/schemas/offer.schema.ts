@@ -4,8 +4,8 @@ import { Currencies, CryptoCurrencies, OfferTypes } from '../types/offer.ts';
 const offerSchema = new Schema({
     location: [{type: Number, required: true, length: 2}],
     type: {type: String, required: true, enum: Object.values(OfferTypes) },
-    currFrom: {type: String, required: true, enum: [...Object.values(Currencies), ...Object.values(CryptoCurrencies)] },
-    currTo: {type: String, required: true, enum: [...Object.values(Currencies), ...Object.values(CryptoCurrencies)] },
+    crypto: {type: String, required: true, enum: Object.values(CryptoCurrencies) },
+    currency: {type: String, required: true, enum: Object.values(Currencies) },
 })
 
 export default offerSchema
