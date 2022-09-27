@@ -90,7 +90,7 @@ export default class AuthController {
 
             //verify that the origin of the signature is the publicAddress from the request
             const address = recoverPersonalSignature({ data: msgBufferHex, sig: signature })
-            if (address.toLowerCase() == publicAddress.toLowerCase()) {
+            if (address.toLowerCase() != publicAddress.toLowerCase()) {
                 return next({ statusCode: 401, msg: "Signature Verification failed" })
             }
 
