@@ -67,9 +67,9 @@ export default class AuthController {
             return next({ statusCode: 500, msg: e.toString() });
         }
     }
-/**
- * POST /auth/login
- */
+    /**
+     * POST /auth/login
+     */
     static async postLogin(req: OpineRequest, res: OpineResponse, next: NextFunction) {
         const { publicAddress, signature }: { publicAddress: string, signature: string } = req.body;
         try {
@@ -82,7 +82,7 @@ export default class AuthController {
             if (!user) {
                 return next({ statusCode: 400, msg: "User not Found" })
             }
-            
+
             //construct verification message
             const nonce = AuthController.getNonce(publicAddress)
             const msg = `I am signing my one-time nonce: ${nonce}`
@@ -90,7 +90,7 @@ export default class AuthController {
 
             //verify that the origin of the signature is the publicAddress from the request
             const address = recoverPersonalSignature({ data: msgBufferHex, sig: signature })
-            if (address.toLowerCase() != publicAddress.toLowerCase()) {
+            if (address.toLowerCase() == publicAddress.toLowerCase()) {
                 return next({ statusCode: 401, msg: "Signature Verification failed" })
             }
 
@@ -114,7 +114,7 @@ export default class AuthController {
             }
         }
     }
-    
+
     /**
      * retrieve a nonce for a User or update and retrieve it, if it was deleted by TTL index
      */
@@ -128,13 +128,13 @@ export default class AuthController {
         let nonce: string;
         if (user.nonces.length != 0) {
             const encryptedNonce = user.nonces[0].value
-            
+
             const iv = await IV.findOne({ _id: user.nonces[0].ivId })
             if (!iv) throw "IV not found";
-            
+
             const key = await Key.findOne({})
-            if(!key) throw "AES Secret missing";
-            
+            if (!key) throw "AES Secret missing";
+
             nonce = AuthController.decrypt(encryptedNonce, iv.value, key.value)
         } else {
             nonce = await AuthController.updateNonce(publicAddress)
@@ -157,13 +157,13 @@ export default class AuthController {
 
         //get encrpytion key
         const key = await Key.findOne({})
-        if(!key) throw "AES Secret missing"
+        if (!key) throw "AES Secret missing"
 
         //encrypt nonce
         const encrypted = AuthController.encrypt(value, ivString, key.value)
 
         //insert Nonce
-        const nonceId = <string> await Nonce.insertOne(<TNonce>{ value: encrypted, ivId: ivId })
+        const nonceId = <string>await Nonce.insertOne(<TNonce>{ value: encrypted, ivId: ivId })
 
         //update User with nonce id
         await User.updateOne({ publicAddress: publicAddress }, { $set: { nonceId: nonceId } })
