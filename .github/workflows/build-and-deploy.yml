@@ -24,9 +24,6 @@ jobs:
 
       - name: Print deno version
         run: deno --version
-
-      - name: Run backend tests with import map
-        run: deno test --allow-all --import-map=./tests/importmap.json
       
   build:
     runs-on: ubuntu-latest
