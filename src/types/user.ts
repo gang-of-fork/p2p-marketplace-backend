@@ -11,5 +11,9 @@ export type TUserLookup = {
     publicAddress: string,
     nonceId: string
     nonces: TNonce[]
+}
 
+export type TUserJWT = {
+    _id: string
+    publicAddress: string
 }
