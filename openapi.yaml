@@ -35,7 +35,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/registerUser'
+                type: object
+                properties:
+                  publicAddress:
+                    type: string
+                    example: "0x2C5c4704F70E5bD5C1C82FD399b920A1B35b9702"
+                    format: Metamask Wallet Address
         required: true
       responses:
         '201':
@@ -69,11 +74,19 @@ paths:
           
       responses:
         '200':
-          description: Basic User Info
+          description: Auth User Info
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/registerUser'
+                type: object
+                properties:
+                  publicAddress:
+                    type: string
+                    example: "0x2C5c4704F70E5bD5C1C82FD399b920A1B35b9702"
+                    format: Metamask Wallet Address
+                  nonce: 
+                    type: string
+                    example: "646454"
         '400':
           description: Invalid input
           content:
@@ -101,7 +114,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/loginUser'
+              type: object
+              properties:
+                publicAddress:
+                  type: string
+                  example: "0x2C5c4704F70E5bD5C1C82FD399b920A1B35b9702"
+                  format: hex
+                signature:
+                  type: string
+                  example: "0x0e25434a97fa5789980dddfa5190cc5bc7846e026d6bbd2650036069283c64ca16ffd212716f01997486fe88c49f2bfabaefd51048673d248bc32ad9a5470fc61c"
+                  format: hex
         required: true
       responses:
         '200':
@@ -114,6 +136,7 @@ paths:
                   jwt: 
                     type: string
                     format: JWT
+                    example: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzMxZjUyZmE3Y2Y2NTJkNWE5MTU0NmUiLCJwdWJsaWNBZGRyZXNzIjoiMHgyQzVjNDcwNEY3MEU1YkQ1QzFDODJGRDM5OWI5MjBBMUIzNWI5NzAyIn0.scNUhYHYF7a7XpPhgSSy5nSZrjYGPrDG4Ymym733OVH47oi6wnVLGBvaDEgQ7VZ5qwzkCbOHdB_X9e3w8EoKiA"
                   
         '400':
           description: Invalid input
@@ -202,27 +225,12 @@ components:
         publicAddress:
           type: string
           format: Metamask Wallet Address
-        nonce:
-          type: integer
-          example: 1234
+        nonceId:
+          type: string
+          format: Mongo ObjectId
+          example: 6331f650fe79dbd805b7af22
           readOnly: true
 
-    registerUser:
-      type: object
-      properties:
-        publicAddress:
-          type: string
-          format: Metamask Wallet Address
-          
-    loginUser:
-      type: object
-      properties:
-        publicAddress:
-          type: string
-          format: hex
-        signature:
-          type: string
-          format: hex
     
     Offer:
       type: object
