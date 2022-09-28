@@ -1,5 +1,5 @@
 {
     "imports": {
-      "../collections/offerCollection.ts": "https://deno.land/x/denomongo_unittest_utils@v0.3/mod.ts"
+        "../collections/offerCollection.ts": "https://deno.land/x/denomongo_unittest_utils@v0.3/mod.ts"
     }
-  }
+}
