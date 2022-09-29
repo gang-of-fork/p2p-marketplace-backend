@@ -47,6 +47,9 @@ export default class AuthController {
             if (isValidationError(e)) {
                 return next({ statusCode: 400, msg: e.toString() });
             }
+            if(e.toString().startsWith("E11000")) {
+                return next({statusCode: 400, msg: "User already exists"})
+            }
             //remove message in prod for security reasons
             return next({ statusCode: 500, msg: e.toString() });
         }
@@ -84,7 +87,7 @@ export default class AuthController {
             }
 
             //construct verification message
-            const nonce = AuthController.getNonce(publicAddress);
+            const nonce = await AuthController.getNonce(publicAddress);
             const msg = `I am signing my one-time nonce: ${nonce}`
             console.log("msg to verify: ", msg)
             const msgBufferHex = bufferToHex(Buffer.from(msg, 'utf8'))
