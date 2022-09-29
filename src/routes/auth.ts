@@ -74,7 +74,7 @@ export default class AuthController {
         const { publicAddress, signature }: { publicAddress: string, signature: string } = req.body;
         try {
             //check signature format
-            if (signature.length != 132 && !signature.startsWith("0x")) {
+            if (signature.length != 132 || !signature.startsWith("0x")) {
                 return next({ statusCode: 400, msg: "Invalid signature length or signature does not start with 0x" })
             }
 
@@ -84,12 +84,15 @@ export default class AuthController {
             }
 
             //construct verification message
-            const nonce = AuthController.getNonce(publicAddress)
+            const nonce = AuthController.getNonce(publicAddress);
             const msg = `I am signing my one-time nonce: ${nonce}`
+            console.log("msg to verify: ", msg)
             const msgBufferHex = bufferToHex(Buffer.from(msg, 'utf8'))
 
             //verify that the origin of the signature is the publicAddress from the request
             const address = recoverPersonalSignature({ data: msgBufferHex, sig: signature })
+            console.log("recovered: ", address)
+            console.log("expected: ", publicAddress)
             if (address.toLowerCase() != publicAddress.toLowerCase()) {
                 return next({ statusCode: 401, msg: "Signature Verification failed" })
             }
