@@ -153,7 +153,7 @@ export default class AuthController {
         let iv = new Uint8Array(16);
         iv = crypto.getRandomValues(iv)
         const ivString = encodeToString(iv)
-        const ivId = await IV.insertOne({ value: ivString })
+        const ivId = await IV.insertOne({ value: ivString, created_at: new Date() })
 
         //get encrpytion key
         const key = await Key.findOne({})
@@ -163,7 +163,7 @@ export default class AuthController {
         const encrypted = AuthController.encrypt(value, ivString, key.value)
 
         //insert Nonce
-        const nonceId = <string>await Nonce.insertOne(<TNonce>{ value: encrypted, ivId: ivId })
+        const nonceId = <string>await Nonce.insertOne(<TNonce>{ value: encrypted, ivId: ivId, created_at: new Date() })
 
         //update User with nonce id
         await User.updateOne({ publicAddress: publicAddress }, { $set: { nonceId: nonceId } })
