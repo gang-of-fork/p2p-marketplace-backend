@@ -89,13 +89,10 @@ export default class AuthController {
             //construct verification message
             const nonce = await AuthController.getNonce(publicAddress);
             const msg = `I am signing my one-time nonce: ${nonce}`
-            console.log("msg to verify: ", msg)
             const msgBufferHex = bufferToHex(Buffer.from(msg, 'utf8'))
 
             //verify that the origin of the signature is the publicAddress from the request
             const address = recoverPersonalSignature({ data: msgBufferHex, sig: signature })
-            console.log("recovered: ", address)
-            console.log("expected: ", publicAddress)
             if (address.toLowerCase() != publicAddress.toLowerCase()) {
                 return next({ statusCode: 401, msg: "Signature Verification failed" })
             }
