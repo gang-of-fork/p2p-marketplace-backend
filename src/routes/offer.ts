@@ -64,9 +64,11 @@ export default class OfferController {
 
         try {
             offerSchema.assert(offerToInsert);
-            const offer = await Offer.insertOne(offerToInsert);
+            const offerId = await Offer.insertOne(offerToInsert);
             
-            User.updateOne({ _id: new Bson.ObjectId(<TRequestWithUser>req).user.userId })
+
+            console.log(new Bson.ObjectId((<TRequestWithUser>req).user.userId as string));
+            console.log(await User.updateOne({ _id: new Bson.ObjectId((<TRequestWithUser>req).user.userId as string) }, { $addToSet: { offers: offerId } }));
 
             return res.setStatus(201).send();
         } catch (e) {

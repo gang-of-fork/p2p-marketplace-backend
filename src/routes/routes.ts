@@ -1,4 +1,4 @@
-import { OpineRequest, OpineResponse, Router } from "https://deno.land/x/opine@2.1.1/mod.ts";
+import { OpineRequest, OpineResponse, Router } from "../depts.ts";
 import AuthController from "./auth.ts";
 import OfferController from "./offer.ts";
 

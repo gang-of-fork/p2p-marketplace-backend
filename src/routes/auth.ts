@@ -4,19 +4,19 @@ import User from "../collections/userCollection.ts"
 import { isValidationError } from "../utils/utils.ts";
 import { recoverPersonalSignature } from "npm:eth-sig-util"
 import { bufferToHex } from "npm:ethereumjs-util"
-import { Buffer } from "https://deno.land/std@0.120.0/node/_buffer.js";
-import { create } from "https://deno.land/x/djwt@v2.2/mod.ts";
+import { Buffer } from "../depts.ts";
+import { create } from "../depts.ts";
 import IV from "../collections/ivCollection.ts"
 import Nonce from "../collections/nonceCollection.ts";
-import { Aes } from "https://deno.land/x/crypto@v0.10.0/aes.ts";
+import { Aes } from "../depts.ts";
 import {
     Cbc,
     Padding,
-} from "https://deno.land/x/crypto@v0.10.0/block-modes.ts";
+} from "../depts.ts";
 import {
     decodeString,
     encodeToString,
-} from "https://deno.land/std@0.95.0/encoding/hex.ts";
+} from "../depts.ts";
 import { TNonce } from "../types/nonce.ts";
 import { TUserLookup } from "../types/user.ts";
 import Key from "../collections/keysCollection.ts";
