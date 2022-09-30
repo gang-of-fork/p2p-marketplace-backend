@@ -47,6 +47,9 @@ export default class AuthController {
             if (isValidationError(e)) {
                 return next({ statusCode: 400, msg: e.toString() });
             }
+            if(e.toString().startsWith("E11000")) {
+                return next({statusCode: 400, msg: "User already exists"})
+            }
             //remove message in prod for security reasons
             return next({ statusCode: 500, msg: e.toString() });
         }
@@ -74,7 +77,7 @@ export default class AuthController {
         const { publicAddress, signature }: { publicAddress: string, signature: string } = req.body;
         try {
             //check signature format
-            if (signature.length != 132 && !signature.startsWith("0x")) {
+            if (signature.length != 132 || !signature.startsWith("0x")) {
                 return next({ statusCode: 400, msg: "Invalid signature length or signature does not start with 0x" })
             }
 
@@ -84,7 +87,7 @@ export default class AuthController {
             }
 
             //construct verification message
-            const nonce = AuthController.getNonce(publicAddress)
+            const nonce = await AuthController.getNonce(publicAddress);
             const msg = `I am signing my one-time nonce: ${nonce}`
             const msgBufferHex = bufferToHex(Buffer.from(msg, 'utf8'))
 
@@ -153,7 +156,7 @@ export default class AuthController {
         let iv = new Uint8Array(16);
         iv = crypto.getRandomValues(iv)
         const ivString = encodeToString(iv)
-        const ivId = await IV.insertOne({ value: ivString })
+        const ivId = await IV.insertOne({ value: ivString, created_at: new Date() })
 
         //get encrpytion key
         const key = await Key.findOne({})
@@ -163,7 +166,7 @@ export default class AuthController {
         const encrypted = AuthController.encrypt(value, ivString, key.value)
 
         //insert Nonce
-        const nonceId = <string>await Nonce.insertOne(<TNonce>{ value: encrypted, ivId: ivId })
+        const nonceId = <string>await Nonce.insertOne(<TNonce>{ value: encrypted, ivId: ivId, created_at: new Date() })
 
         //update User with nonce id
         await User.updateOne({ publicAddress: publicAddress }, { $set: { nonceId: nonceId } })
