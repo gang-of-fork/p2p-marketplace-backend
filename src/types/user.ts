@@ -3,7 +3,8 @@ import { TNonce } from "./nonce.ts"
 export type TUser = {
     _id: string
     publicAddress: string,
-    nonceId: string
+    nonceId: string,
+    offers?: string[] 
 }
 
 export type TUserLookup = {
@@ -15,5 +16,5 @@ export type TUserLookup = {
 
 export type TUserJWT = {
     userId: string
-    publicAddress: string
+    publicAddress: string;
 }
