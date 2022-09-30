@@ -1,4 +1,4 @@
-import { Schema } from "https://deno.land/x/valivar@v6.2.11/mod.ts"
+import { Schema } from "../depts.ts";
 import { Currencies, CryptoCurrencies, OfferTypes } from '../types/offer.ts';
 
 const offerSchema = new Schema({
