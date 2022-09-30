@@ -1,13 +1,11 @@
-import {
-    NextFunction,
-    OpineRequest,
-    OpineResponse,
-  } from "https://deno.land/x/opine@2.1.1/mod.ts";
-  import { Bson } from "https://deno.land/x/mongo@v0.29.2/mod.ts"
+import { OpineRequest, OpineResponse, NextFunction, Bson } from "../depts.ts";
 
 import Offer from "../collections/offerCollection.ts";
 import offerSchema from "../schemas/offer.schema.ts";
+import User from "../collections/userCollection.ts"
+
 import { isValidationError } from "../utils/utils.ts";
+import { TRequestWithUser } from "../types/request.ts";
 
 export default class OfferController {
     public static async getAllOffers(req: OpineRequest, res: OpineResponse, next: NextFunction) {
@@ -66,7 +64,10 @@ export default class OfferController {
 
         try {
             offerSchema.assert(offerToInsert);
-            await Offer.insertOne(offerToInsert);
+            const offer = await Offer.insertOne(offerToInsert);
+            
+            User.updateOne({ _id: new Bson.ObjectId(<TRequestWithUser>req).user.userId })
+
             return res.setStatus(201).send();
         } catch (e) {
             if(isValidationError(e)) {

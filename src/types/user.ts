@@ -14,6 +14,6 @@ export type TUserLookup = {
 }
 
 export type TUserJWT = {
-    _id: string
+    userId: string
     publicAddress: string
 }

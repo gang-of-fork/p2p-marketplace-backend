@@ -1,4 +1,4 @@
-import { NextFunction, OpineRequest, OpineResponse } from "https://deno.land/x/opine@2.1.1/mod.ts";
+import { NextFunction, OpineRequest, OpineResponse } from "../depts.ts";
 import userSchema from "../schemas/user.schema.ts";
 import User from "../collections/userCollection.ts"
 import { isValidationError } from "../utils/utils.ts";

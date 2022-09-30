@@ -9,6 +9,8 @@ export default async function authMiddleware(
   next: NextFunction,
 ) {
   try {
+    console.log(Deno.env.get("JWT_SECRET") as string)
+
     const bearer = req.headers.get("Authorization") as string;
     if (!bearer.startsWith("Bearer ")) {
       return next({ statusCode: 400, msg: "Wrong Bearer format" });
@@ -20,6 +22,7 @@ export default async function authMiddleware(
     (<TRequestWithUser>req).user = user;
     next();
   } catch (_e) {
+    console.log(_e);
     return next({ statusCode: 401, msg: "Unauthorized" })
   }
 }
