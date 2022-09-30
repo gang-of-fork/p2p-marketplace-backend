@@ -4,7 +4,10 @@ export type {
   OpineRequest,
   OpineResponse,
 } from "https://deno.land/x/opine@2.1.1/mod.ts";
-export { Router } from "https://deno.land/x/opine@2.1.1/mod.ts";
+export { Router, json, opine } from "https://deno.land/x/opine@2.1.1/mod.ts";
+
+//opineCors
+export { opineCors } from "https://deno.land/x/cors@v1.2.1/mod.ts";
 
 //mongo
 export { Bson, MongoClient } from "https://deno.land/x/mongo@v0.29.2/mod.ts";

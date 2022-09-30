@@ -1,6 +1,6 @@
 import "https://deno.land/x/dotenv@v3.2.0/load.ts"; //load env
-import { json, opine } from "https://deno.land/x/opine@2.1.1/mod.ts";
-import { opineCors } from "https://deno.land/x/cors@v1.2.1/mod.ts";
+import { json, opine } from "./src/depts.ts";
+import { opineCors } from "./src/depts.ts";
 import "https://deno.land/x/dotenv@v3.2.0/load.ts"; //load env
 import Routes from './src/routes/routes.ts';
 import errorMiddleware from "./src/middleware/errorMiddleware.ts";
