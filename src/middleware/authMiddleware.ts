@@ -21,6 +21,6 @@ export default async function authMiddleware(
     next();
   } catch (_e) {
     console.log(_e);
-    return next({ statusCode: 401, msg: "Unauthorized" })
+    return next({ statusCode: 401, msg: "You shall not pass" })
   }
 }
