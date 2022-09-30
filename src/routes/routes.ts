@@ -33,5 +33,6 @@ router.delete("/offers/:id", authMiddleware, OfferController.deleteOffer);
 router.post("/offers/:offerId/match", authMiddleware, MatchController.matchOffer);
 router.post("/matches/:matchId/submit", authMiddleware, MatchController.submitHashForMatch);
 router.get("/matches/my", authMiddleware, MatchController.getMyMatches);
+router.get("/matches/:matchId", authMiddleware, MatchController.viewMatch);
 
 export default router;

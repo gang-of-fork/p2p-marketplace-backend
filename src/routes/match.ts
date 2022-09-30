@@ -68,15 +68,36 @@ export default class MatchController {
             return next({ status: 500, msg: "Somthing went wrong" });
         }
 
-        const matches = await Match.find({ _id: { $in: myUser.offers } }, { projection: { _id: 1 } }).toArray();
+        const matches = await Match.find({ offer: { $in: myUser.offers }, $and: [ { hash: { $ne: "" } }, { hash: { $exists: true } } ], }, { projection: { _id: 1 } }).toArray();
 
         res.json({
             data: matches,
             count: matches.length
-        })
+        });
     }
 
     public static async viewMatch(req: OpineRequest, res: OpineResponse, next: NextFunction) {
+        const myUser = await User.findOne({ _id: new Bson.ObjectId((<TRequestWithUser> req).user.userId as string) });
+
+        if(!myUser) {
+            return next({ status: 500, msg: "Somthing went wrong" });
+        }
         
+        const viewedAt = new Date();
+
+        const match = await Match.findOne({ _id: new Bson.ObjectId(req.params.matchId), offer: { $in: myUser.offers }, $and: [ { hash: { $ne: "" } }, { hash: { $exists: true } } ] }, { projection: { user: 0 } });
+
+        if(!match) {
+            return next({ status: 400, msg: "No match found" });
+        }
+
+        if(!match?.viewedAt) {
+            await Match.updateOne(
+                { _id: match._id },
+                { $set: { viewedAt: viewedAt } }
+            );
+        }
+
+        res.json(match);
     }
 }
