@@ -1,5 +1,5 @@
-import { OpineRequest, OpineResponse, NextFunction } from '../depts.ts';
-import { Bson } from '../depts.ts';
+import { OpineRequest, OpineResponse, NextFunction } from '../../deps.ts';
+import { Bson } from '../../deps.ts';
 
 import matchSchema from "../schemas/match.schema.ts";
 

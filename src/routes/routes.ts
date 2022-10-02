@@ -1,4 +1,4 @@
-import { OpineRequest, OpineResponse, Router } from "../depts.ts";
+import { OpineRequest, OpineResponse, Router } from "../../deps.ts";
 import AuthController from "./auth.ts";
 import OfferController from "./offer.ts";
 import MatchController from "./match.ts";

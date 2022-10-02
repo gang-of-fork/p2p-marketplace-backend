@@ -1,4 +1,4 @@
-import { NextFunction, OpineRequest, OpineResponse } from "../depts.ts";
+import { NextFunction, OpineRequest, OpineResponse } from "../../deps.ts";
 import { PlantExchangeError } from "../types/errors.ts";
 
 export default function (err: PlantExchangeError, _req: OpineRequest, res: OpineResponse, next: NextFunction) {

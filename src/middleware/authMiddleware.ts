@@ -1,5 +1,5 @@
-import { NextFunction, OpineRequest, OpineResponse } from "../depts.ts";
-import { verify, decode } from "../depts.ts";
+import { NextFunction, OpineRequest, OpineResponse } from "../../deps.ts";
+import { verify, decode } from "../../deps.ts";
 import { TUserJWT } from "../types/user.ts";
 import { TRequestWithUser } from "../types/request.ts";
 
