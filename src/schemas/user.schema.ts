@@ -1,5 +1,5 @@
-import { Schema } from "../depts.ts";
-import { Bson } from "../depts.ts";
+import { Schema } from "../../deps.ts";
+import { Bson } from "../../deps.ts";
 
 const userSchema = new Schema({
     publicAddress: {type: String, required: true},

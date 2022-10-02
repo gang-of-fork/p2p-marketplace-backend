@@ -1,4 +1,4 @@
-import { Bson, NextFunction, OpineRequest, OpineResponse } from "../depts.ts";
+import { Bson, NextFunction, OpineRequest, OpineResponse } from "../../deps.ts";
 
 import Offer from "../collections/offerCollection.ts";
 import offerSchema from "../schemas/offer.schema.ts";

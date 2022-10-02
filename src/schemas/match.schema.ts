@@ -1,4 +1,4 @@
-import { Schema, Bson } from "../depts.ts";
+import { Schema, Bson } from "../../deps.ts";
 
 const matchSchema = new Schema({
     viewedAt: {type: Date, default: null },

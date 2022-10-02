@@ -1,22 +1,22 @@
-import { NextFunction, OpineRequest, OpineResponse } from "../depts.ts";
+import { NextFunction, OpineRequest, OpineResponse } from "../../deps.ts";
 import userSchema from "../schemas/user.schema.ts";
 import User from "../collections/userCollection.ts"
 import { isValidationError } from "../utils/utils.ts";
 import { recoverPersonalSignature } from "npm:eth-sig-util"
 import { bufferToHex } from "npm:ethereumjs-util"
-import { Buffer } from "../depts.ts";
-import { create } from "../depts.ts";
+import { Buffer } from "../../deps.ts";
+import { create } from "../../deps.ts";
 import IV from "../collections/ivCollection.ts"
 import Nonce from "../collections/nonceCollection.ts";
-import { Aes } from "../depts.ts";
+import { Aes } from "../../deps.ts";
 import {
     Cbc,
     Padding,
-} from "../depts.ts";
+} from "../../deps.ts";
 import {
     decodeString,
     encodeToString,
-} from "../depts.ts";
+} from "../../deps.ts";
 import { TNonce } from "../types/nonce.ts";
 import { TUserLookup } from "../types/user.ts";
 import Key from "../collections/keysCollection.ts";

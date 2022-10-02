@@ -1,4 +1,4 @@
-import { MongoClient } from "../depts.ts";
+import { MongoClient } from "../../deps.ts";
 import "https://deno.land/x/dotenv@v3.2.0/load.ts"; //load env
 import { Mutex } from "https://cdn.skypack.dev/async-mutex";
 export default class Connection {

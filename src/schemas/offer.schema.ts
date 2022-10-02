@@ -1,4 +1,4 @@
-import { Schema } from "../depts.ts";
+import { Schema } from "../../deps.ts";
 import { Currencies, CryptoCurrencies, OfferTypes } from '../types/offer.ts';
 
 const offerSchema = new Schema({
