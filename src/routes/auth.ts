@@ -6,7 +6,7 @@ import { recoverPersonalSignature } from "npm:eth-sig-util"
 import { bufferToHex } from "npm:ethereumjs-util"
 import Nonce from "../collections/nonceCollection.ts";
 import { TNonce } from "../types/nonce.ts";
-import { TUserLookup } from "../types/user.ts";
+import { TUserJWT, TUserLookup } from "../types/user.ts";
 
 export default class AuthController {
     /**
@@ -81,7 +81,7 @@ export default class AuthController {
             }
 
             //create JWT
-            const jwt = await create({ alg: "HS512", typ: "JWT" }, {
+            const jwt = await create({ alg: "HS512", typ: "JWT" }, <TUserJWT>{
                 userId: user._id,
                 publicAddress: user.publicAddress
             }, Deno.env.get("JWT_SECRET") as string);
