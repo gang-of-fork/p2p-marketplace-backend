@@ -238,6 +238,9 @@ components:
         _id:
           type: string
           readOnly: true
+        name: 
+          type: string
+          readOnly: true
         type:
           type: string
           enum: [ 'BUY', 'SELL' ]

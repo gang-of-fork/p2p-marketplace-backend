@@ -17,8 +17,9 @@ export enum CryptoCurrencies {
     CLT = 'CLT'
 }
 
-export type Offer = {
+export type TOffer = {
     _id: string,
+    name: string,
     type: OfferTypes,
     location: [number, number],
     currFrom: Currencies | CryptoCurrencies,

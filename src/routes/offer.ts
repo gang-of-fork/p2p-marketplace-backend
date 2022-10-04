@@ -1,10 +1,10 @@
-import { Bson, NextFunction, OpineRequest, OpineResponse } from "../depts.ts";
+import { Bson, NextFunction, OpineRequest, OpineResponse } from "../../deps.ts";
 
 import Offer from "../collections/offerCollection.ts";
 import offerSchema from "../schemas/offer.schema.ts";
 import User from "../collections/userCollection.ts";
 
-import { isValidationError } from "../utils/utils.ts";
+import { getRandomPlantName, isValidationError } from "../utils/utils.ts";
 import { TRequestWithUser } from "../types/request.ts";
 
 export default class OfferController {
@@ -92,6 +92,7 @@ export default class OfferController {
     //construct offer
     const offerToInsert = {
       type: req.body.type,
+      name: getRandomPlantName(),
       location: req.body.location,
       crypto: req.body.crypto,
       currency: req.body.currency,
