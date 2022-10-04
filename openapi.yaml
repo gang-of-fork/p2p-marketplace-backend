@@ -19,6 +19,8 @@ tags:
     description: Everything about registration and authentication
   - name: offers
     description: Routes for offers
+  - name: matches
+    description: Routes for matches
 paths:
   /auth/register:
     post:
@@ -35,12 +37,7 @@ paths:
         content:
           application/json:
             schema:
-                type: object
-                properties:
-                  publicAddress:
-                    type: string
-                    example: "0x2C5c4704F70E5bD5C1C82FD399b920A1B35b9702"
-                    format: Metamask Wallet Address
+              $ref: '#/components/schemas/registerUser'
         required: true
       responses:
         '201':
@@ -74,19 +71,11 @@ paths:
           
       responses:
         '200':
-          description: Auth User Info
+          description: Basic User Info
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  publicAddress:
-                    type: string
-                    example: "0x2C5c4704F70E5bD5C1C82FD399b920A1B35b9702"
-                    format: Metamask Wallet Address
-                  nonce: 
-                    type: string
-                    example: "646454"
+                $ref: '#/components/schemas/registerUser'
         '400':
           description: Invalid input
           content:
@@ -114,16 +103,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                publicAddress:
-                  type: string
-                  example: "0x2C5c4704F70E5bD5C1C82FD399b920A1B35b9702"
-                  format: hex
-                signature:
-                  type: string
-                  example: "0x0e25434a97fa5789980dddfa5190cc5bc7846e026d6bbd2650036069283c64ca16ffd212716f01997486fe88c49f2bfabaefd51048673d248bc32ad9a5470fc61c"
-                  format: hex
+              $ref: '#/components/schemas/loginUser'
         required: true
       responses:
         '200':
@@ -136,7 +116,6 @@ paths:
                   jwt: 
                     type: string
                     format: JWT
-                    example: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzMxZjUyZmE3Y2Y2NTJkNWE5MTU0NmUiLCJwdWJsaWNBZGRyZXNzIjoiMHgyQzVjNDcwNEY3MEU1YkQ1QzFDODJGRDM5OWI5MjBBMUIzNWI5NzAyIn0.scNUhYHYF7a7XpPhgSSy5nSZrjYGPrDG4Ymym733OVH47oi6wnVLGBvaDEgQ7VZ5qwzkCbOHdB_X9e3w8EoKiA"
                   
         '400':
           description: Invalid input
@@ -159,6 +138,8 @@ paths:
   
   /offers:
     get:
+      tags:
+        - offers
       summary: Get list of all offers
       description: Get a List of all offers
       responses:
@@ -176,6 +157,8 @@ paths:
                   count:
                     type: integer
     post:
+      tags:
+        - offers
       summary: Create a new offer
       description: Create a new offer
       requestBody:
@@ -195,6 +178,8 @@ paths:
         schema:
           type: string
     get:
+      tags:
+        - offers
       summary: Get list of all offers
       description: Get a List of all offers
       responses:
@@ -206,12 +191,113 @@ paths:
                 $ref: '#/components/schemas/Offer'
 
     delete:
+      tags:
+        - offers
       summary: Delete an offer
       description: Delete an offer by id
       responses:
         201:
           description: offer deleted
-
+  
+  /offers/{offerId}/match:
+    parameters:
+      - in: path
+        name: offerId
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - matches
+      summary: Match an offer by id
+      description: Create a match for an offer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Match'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  publicAddress:
+                    type: string
+                    description: "public address to use for encryption"
+                  match:
+                    type: string
+                    description: "id of the match"
+  
+  /matches/{matchId}/submit:
+    parameters:
+      - in: path
+        name: matchId
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - matches
+      summary: Submit encrypted contact details 
+      description: Submit encrypted contact details for a match
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ hash ]
+              properties:
+                hash:
+                  type: string
+                  description: "encrypted contact details"
+      responses:
+        201:
+          description: Success
+  
+  /matches/my:
+    get:
+      tags:
+      - matches
+      summary: Get matches for own offers
+      description: Get matches for offers that were created by the logged in user
+      responses:
+        200:
+          description: List of all matches
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Match'
+                  count:
+                    type: integer
+  /matches/{matchId}:
+    parameters:
+      - in: path
+        name: matchId
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+      - matches
+      summary: Get match by id
+      description: Get match by id
+      responses:
+        200:
+          description: data of the match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+      
+  
 components:
   schemas:
     User:
@@ -225,12 +311,27 @@ components:
         publicAddress:
           type: string
           format: Metamask Wallet Address
-        nonceId:
-          type: string
-          format: Mongo ObjectId
-          example: 6331f650fe79dbd805b7af22
+        nonce:
+          type: integer
+          example: 1234
           readOnly: true
 
+    registerUser:
+      type: object
+      properties:
+        publicAddress:
+          type: string
+          format: Metamask Wallet Address
+          
+    loginUser:
+      type: object
+      properties:
+        publicAddress:
+          type: string
+          format: hex
+        signature:
+          type: string
+          format: hex
     
     Offer:
       type: object
@@ -238,7 +339,7 @@ components:
         _id:
           type: string
           readOnly: true
-        name: 
+        name:
           type: string
           readOnly: true
         type:
@@ -256,6 +357,35 @@ components:
         currency:
           type: string
           enum: [ 'GBP', 'USD', 'CAD', 'EUR' ]
+    
+    Match:
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        viewedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        user:
+          type: string
+          description: User ObjectId
+          readOnly: true
+        offer:
+          type: string
+          description: Offer ObjectId
+          readOnly: true
+        hash:
+          type: string
+          readOnly: true
 
           
     error:
