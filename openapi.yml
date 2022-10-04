@@ -159,6 +159,8 @@ paths:
   
   /offers:
     get:
+      security:
+      - bearerJWT: []
       summary: Get list of all offers
       description: Get a List of all offers
       responses:
@@ -176,6 +178,8 @@ paths:
                   count:
                     type: integer
     post:
+      security:
+      - bearerJWT: []
       summary: Create a new offer
       description: Create a new offer
       requestBody:
@@ -195,6 +199,8 @@ paths:
         schema:
           type: string
     get:
+      security:
+      - bearerJWT: []
       summary: Get list of all offers
       description: Get a List of all offers
       responses:
@@ -206,6 +212,8 @@ paths:
                 $ref: '#/components/schemas/Offer'
 
     delete:
+      security:
+      - bearerJWT: []
       summary: Delete an offer
       description: Delete an offer by id
       responses:
