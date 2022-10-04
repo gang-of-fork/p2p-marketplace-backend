@@ -19,8 +19,6 @@ tags:
     description: Everything about registration and authentication
   - name: offers
     description: Routes for offers
-  - name: matches
-    description: Routes for matches
 paths:
   /auth/register:
     post:
@@ -37,7 +35,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/registerUser'
+                type: object
+                properties:
+                  publicAddress:
+                    type: string
+                    example: "0x2C5c4704F70E5bD5C1C82FD399b920A1B35b9702"
+                    format: Metamask Wallet Address
         required: true
       responses:
         '201':
@@ -71,11 +74,19 @@ paths:
           
       responses:
         '200':
-          description: Basic User Info
+          description: Auth User Info
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/registerUser'
+                type: object
+                properties:
+                  publicAddress:
+                    type: string
+                    example: "0x2C5c4704F70E5bD5C1C82FD399b920A1B35b9702"
+                    format: Metamask Wallet Address
+                  nonce: 
+                    type: string
+                    example: "646454"
         '400':
           description: Invalid input
           content:
@@ -103,7 +114,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/loginUser'
+              type: object
+              properties:
+                publicAddress:
+                  type: string
+                  example: "0x2C5c4704F70E5bD5C1C82FD399b920A1B35b9702"
+                  format: hex
+                signature:
+                  type: string
+                  example: "0x0e25434a97fa5789980dddfa5190cc5bc7846e026d6bbd2650036069283c64ca16ffd212716f01997486fe88c49f2bfabaefd51048673d248bc32ad9a5470fc61c"
+                  format: hex
         required: true
       responses:
         '200':
@@ -116,6 +136,7 @@ paths:
                   jwt: 
                     type: string
                     format: JWT
+                    example: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzMxZjUyZmE3Y2Y2NTJkNWE5MTU0NmUiLCJwdWJsaWNBZGRyZXNzIjoiMHgyQzVjNDcwNEY3MEU1YkQ1QzFDODJGRDM5OWI5MjBBMUIzNWI5NzAyIn0.scNUhYHYF7a7XpPhgSSy5nSZrjYGPrDG4Ymym733OVH47oi6wnVLGBvaDEgQ7VZ5qwzkCbOHdB_X9e3w8EoKiA"
                   
         '400':
           description: Invalid input
@@ -140,6 +161,8 @@ paths:
     get:
       tags:
         - offers
+      security:
+      - bearerJWT: []
       summary: Get list of all offers
       description: Get a List of all offers
       responses:
@@ -159,6 +182,8 @@ paths:
     post:
       tags:
         - offers
+      security:
+      - bearerJWT: []
       summary: Create a new offer
       description: Create a new offer
       requestBody:
@@ -180,6 +205,8 @@ paths:
     get:
       tags:
         - offers
+      security:
+      - bearerJWT: []
       summary: Get list of all offers
       description: Get a List of all offers
       responses:
@@ -193,6 +220,8 @@ paths:
     delete:
       tags:
         - offers
+      security:
+      - bearerJWT: []
       summary: Delete an offer
       description: Delete an offer by id
       responses:
@@ -209,6 +238,8 @@ paths:
     post:
       tags:
         - matches
+      security:
+      - bearerJWT: []
       summary: Match an offer by id
       description: Create a match for an offer
       requestBody:
@@ -241,6 +272,8 @@ paths:
     post:
       tags:
         - matches
+      security:
+      - bearerJWT: []
       summary: Submit encrypted contact details 
       description: Submit encrypted contact details for a match
       requestBody:
@@ -261,6 +294,8 @@ paths:
     get:
       tags:
       - matches
+      security:
+      - bearerJWT: []
       summary: Get matches for own offers
       description: Get matches for offers that were created by the logged in user
       responses:
@@ -287,6 +322,8 @@ paths:
     get:
       tags:
       - matches
+      security:
+      - bearerJWT: []
       summary: Get match by id
       description: Get match by id
       responses:
@@ -296,8 +333,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Match'
-      
-  
+
 components:
   schemas:
     User:
@@ -311,27 +347,12 @@ components:
         publicAddress:
           type: string
           format: Metamask Wallet Address
-        nonce:
-          type: integer
-          example: 1234
+        nonceId:
+          type: string
+          format: Mongo ObjectId
+          example: 6331f650fe79dbd805b7af22
           readOnly: true
 
-    registerUser:
-      type: object
-      properties:
-        publicAddress:
-          type: string
-          format: Metamask Wallet Address
-          
-    loginUser:
-      type: object
-      properties:
-        publicAddress:
-          type: string
-          format: hex
-        signature:
-          type: string
-          format: hex
     
     Offer:
       type: object
@@ -339,7 +360,7 @@ components:
         _id:
           type: string
           readOnly: true
-        name:
+        name: 
           type: string
           readOnly: true
         type:
@@ -357,7 +378,7 @@ components:
         currency:
           type: string
           enum: [ 'GBP', 'USD', 'CAD', 'EUR' ]
-    
+          
     Match:
       type: object
       properties:
@@ -406,5 +427,3 @@ components:
 security:
   - bearerJWT: [] 
         
-
-    
