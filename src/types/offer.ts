@@ -22,6 +22,6 @@ export type TOffer = {
     name: string,
     type: OfferTypes,
     location: [number, number],
-    currFrom: Currencies | CryptoCurrencies,
-    currTo: Currencies | CryptoCurrencies
+    crypto: CryptoCurrencies,
+    currency: Currencies
 }

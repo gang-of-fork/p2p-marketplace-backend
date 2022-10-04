@@ -159,6 +159,11 @@ paths:
   
   /offers:
     get:
+<<<<<<< HEAD:openapi.yml
+=======
+      tags:
+        - offers
+>>>>>>> 31-match-routes:openapi.yaml
       security:
       - bearerJWT: []
       summary: Get list of all offers
@@ -178,6 +183,11 @@ paths:
                   count:
                     type: integer
     post:
+<<<<<<< HEAD:openapi.yml
+=======
+      tags:
+        - offers
+>>>>>>> 31-match-routes:openapi.yaml
       security:
       - bearerJWT: []
       summary: Create a new offer
@@ -199,6 +209,11 @@ paths:
         schema:
           type: string
     get:
+<<<<<<< HEAD:openapi.yml
+=======
+      tags:
+        - offers
+>>>>>>> 31-match-routes:openapi.yaml
       security:
       - bearerJWT: []
       summary: Get list of all offers
@@ -212,6 +227,11 @@ paths:
                 $ref: '#/components/schemas/Offer'
 
     delete:
+<<<<<<< HEAD:openapi.yml
+=======
+      tags:
+        - offers
+>>>>>>> 31-match-routes:openapi.yaml
       security:
       - bearerJWT: []
       summary: Delete an offer
@@ -219,6 +239,112 @@ paths:
       responses:
         201:
           description: offer deleted
+  
+  /offers/{offerId}/match:
+    parameters:
+      - in: path
+        name: offerId
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - matches
+      security:
+      - bearerJWT: []
+      summary: Match an offer by id
+      description: Create a match for an offer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Match'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  publicAddress:
+                    type: string
+                    description: "public address to use for encryption"
+                  match:
+                    type: string
+                    description: "id of the match"
+  
+  /matches/{matchId}/submit:
+    parameters:
+      - in: path
+        name: matchId
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - matches
+      security:
+      - bearerJWT: []
+      summary: Submit encrypted contact details 
+      description: Submit encrypted contact details for a match
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ hash ]
+              properties:
+                hash:
+                  type: string
+                  description: "encrypted contact details"
+      responses:
+        201:
+          description: Success
+  
+  /matches/my:
+    get:
+      tags:
+      - matches
+      security:
+      - bearerJWT: []
+      summary: Get matches for own offers
+      description: Get matches for offers that were created by the logged in user
+      responses:
+        200:
+          description: List of all matches
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Match'
+                  count:
+                    type: integer
+  /matches/{matchId}:
+    parameters:
+      - in: path
+        name: matchId
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+      - matches
+      security:
+      - bearerJWT: []
+      summary: Get match by id
+      description: Get match by id
+      responses:
+        200:
+          description: data of the match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
 
 components:
   schemas:
@@ -258,12 +384,45 @@ components:
           maxItems: 2
           items:
             type: number
+        currrencyAmount:
+          type: integer
+        cryptoAmount:
+          type: integer
         crypto:
           type: string
           enum: [ 'BTC', 'ETH', 'MON', 'CLT' ]
         currency:
           type: string
           enum: [ 'GBP', 'USD', 'CAD', 'EUR' ]
+          
+    Match:
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        viewedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        user:
+          type: string
+          description: User ObjectId
+          readOnly: true
+        offer:
+          type: string
+          description: Offer ObjectId
+          readOnly: true
+        hash:
+          type: string
+          readOnly: true
 
           
     error:
@@ -284,5 +443,3 @@ components:
 security:
   - bearerJWT: [] 
         
-
-    
