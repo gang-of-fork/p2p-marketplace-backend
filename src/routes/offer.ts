@@ -96,6 +96,8 @@ export default class OfferController {
       location: req.body.location,
       crypto: req.body.crypto,
       currency: req.body.currency,
+      currencyAmount: req.body.currencyAmount,
+      cryptoAmount: req.body.cryptoAmount
     };
 
     try {

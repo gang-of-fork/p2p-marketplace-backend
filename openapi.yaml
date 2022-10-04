@@ -372,6 +372,10 @@ components:
           maxItems: 2
           items:
             type: number
+        currrencyAmount:
+          type: integer
+        cryptoAmount:
+          type: integer
         crypto:
           type: string
           enum: [ 'BTC', 'ETH', 'MON', 'CLT' ]
