@@ -159,11 +159,8 @@ paths:
   
   /offers:
     get:
-<<<<<<< HEAD:openapi.yml
-=======
       tags:
         - offers
->>>>>>> 31-match-routes:openapi.yaml
       security:
       - bearerJWT: []
       summary: Get list of all offers
@@ -183,11 +180,8 @@ paths:
                   count:
                     type: integer
     post:
-<<<<<<< HEAD:openapi.yml
-=======
       tags:
         - offers
->>>>>>> 31-match-routes:openapi.yaml
       security:
       - bearerJWT: []
       summary: Create a new offer
@@ -209,11 +203,8 @@ paths:
         schema:
           type: string
     get:
-<<<<<<< HEAD:openapi.yml
-=======
       tags:
         - offers
->>>>>>> 31-match-routes:openapi.yaml
       security:
       - bearerJWT: []
       summary: Get list of all offers
@@ -227,11 +218,8 @@ paths:
                 $ref: '#/components/schemas/Offer'
 
     delete:
-<<<<<<< HEAD:openapi.yml
-=======
       tags:
         - offers
->>>>>>> 31-match-routes:openapi.yaml
       security:
       - bearerJWT: []
       summary: Delete an offer
