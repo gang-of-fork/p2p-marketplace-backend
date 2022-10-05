@@ -10,7 +10,7 @@ export default async function authMiddleware(
 ) {
   try {
     const bearer = req.headers.get("Authorization") as string;
-    if (!bearer.startsWith("Bearer ")) {
+    if (!bearer || !bearer.startsWith("Bearer ")) {
       return next({ statusCode: 400, msg: "Wrong Bearer format" });
     }
     const jwt = bearer.substring("Bearer ".length);
