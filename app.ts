@@ -19,14 +19,13 @@ if (Number.isNaN(port) || db_uri == "") {
     Deno.exit(1);
 }
 
-
 const app = opine();
 app.use(opineCors());
 app.use(json())
 
-
 //serve backend routes
 app.use('/api/v1', Routes);
+
 
 app.use(errorMiddleware)
 
