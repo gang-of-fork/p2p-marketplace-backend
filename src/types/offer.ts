@@ -14,7 +14,8 @@ export enum CryptoCurrencies {
     BTC = 'BTC',
     ETH = 'ETH',
     MON = 'MON',
-    CLT = 'CLT'
+    CLT = 'CLT',
+    CAR = 'ADA
 }
 
 export type TOffer = {
