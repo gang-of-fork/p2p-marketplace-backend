@@ -33,7 +33,7 @@ export default class MatchController {
             const matchId = await Match.insertOne(matchToCreate);
             const user = await User.findOne({ offers: new Bson.ObjectId(req.params.offerId) });
 
-            return res.setStatus(200).json({ publicAddress: user?.publicAddress, match: matchId });
+            return res.setStatus(200).json({ publicKey: user?.publicKey, match: matchId });
           } catch (e) {
             if (isValidationError(e)) {
               return next({ statusCode: 400, msg: e.toString() });

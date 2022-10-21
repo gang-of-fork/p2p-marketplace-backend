@@ -13,12 +13,13 @@ export default class AuthController {
      * POST /auth/register
      */
     static async registerUser(req: OpineRequest, res: OpineResponse, next: NextFunction) {
-        const { publicAddress } = req.body;
+        const { publicAddress, publicKey } = req.body;
 
         //nonceId will be updated in AuthController.updateNonce()
         const userToInsert = {
             publicAddress: publicAddress,
-            nonceId: "initial"
+            nonceId: "initial",
+            publicKey: publicKey
         }
         //insert a user and generate a nonce
         try {

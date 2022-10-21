@@ -5,6 +5,7 @@ export type TUser = {
     publicAddress: string,
     nonceId: string,
     offers?: string[] 
+    publicKey: string
 }
 
 export type TUserLookup = {
