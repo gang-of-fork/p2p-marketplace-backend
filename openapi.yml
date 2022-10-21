@@ -194,7 +194,45 @@ paths:
       responses:
         201:
           description: offer created
-          
+
+  /offers/bounds:
+    get:
+      parameters:
+      - in: query
+        name: crypto
+        required: true
+        schema:
+          type: string
+          enum: [ 'BTC', 'ETH', 'MON', 'CLT' ]
+      - in: query
+        name: currency
+        required: true
+        schema:
+          type: string
+          enum: [ 'GBP', 'USD', 'CAD', 'EUR' ]
+      tags:
+        - offers
+      security:
+      - bearerJWT: []
+      summary: Get upper and lower bounds for offer amounts
+      description: Get upper and lower bounds for offer amounts
+      responses:
+        200:
+          description: List of all offers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  minCurrency:
+                    type: number
+                  maxCurrency:
+                    type: number
+                  minCrypto:
+                    type: number
+                  maxCrypto:
+                    type: number
+
   /offers/{offerId}:
     parameters:
       - in: path
