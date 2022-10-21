@@ -4,6 +4,8 @@ import Offer from "../collections/offerCollection.ts";
 import offerSchema from "../schemas/offer.schema.ts";
 import User from "../collections/userCollection.ts";
 
+import { CryptoCurrencies, Currencies } from '../types/offer.ts';
+
 import { getRandomPlantName, isValidationError } from "../utils/utils.ts";
 import { TRequestWithUser } from "../types/request.ts";
 
@@ -146,5 +148,56 @@ export default class OfferController {
         data: aggreagtionResult[0].offers,
         count: aggreagtionResult[0].offers.length
     });
+  }
+
+  public static async getOfferUpperLowerBound(
+    req: OpineRequest,
+    res: OpineResponse,
+    next: NextFunction,
+  ) {
+    if(!req.query.crypto || ! req.query.currency) {
+      return next({ statusCode: 400, msg: 'Please provide currency and crypto' });
+    }
+
+    if(!Object.values(Currencies).includes(req.query.currency)) {
+      return next({ statusCode: 400, msg: 'Currency must be a valid currency' });
+    }
+
+    if(!Object.values(CryptoCurrencies).includes(req.query.crypto)) {
+      return next({ statusCode: 400, msg: 'Crypto must be a valid crypto' });
+    }
+
+    try {
+      const lowerUpper = await Offer.aggregate([
+        {
+          $match: {
+            currency: req.query.currency,
+            crypto: req.query.crypto
+          }
+        },
+        {
+          $group: {
+            _id: 0,
+            minCurrency: { $min: '$currencyAmount' },
+            maxCurrency: { $max: '$currencyAmount' },
+            minCrypto: { $min: '$cryptoAmount' },
+            maxCrypto: { $max: '$cryptoAmount' },
+          }
+        }
+      ]).toArray();
+
+      if(lowerUpper.length > 0) {
+        res.json(lowerUpper[0]);
+      }
+
+      res.json({
+        minCurrency: 0,
+        maxCurrency: 0,
+        minCrypto: 0,
+        maxCrypto: 0
+      });
+    } catch(e) {
+      return next({ statusCode: 500, msg: 'Something went wrong' });
+    }
   }
 }

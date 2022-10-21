@@ -24,6 +24,7 @@ router.post("/auth/login", AuthController.postLogin)
 router.get("/offers", authMiddleware, OfferController.getAllOffers);
 router.post("/offers", authMiddleware, OfferController.createOffer);
 router.get("/offers/my", authMiddleware, OfferController.getMyOffers);
+router.get("/offers/bounds", authMiddleware, OfferController.getOfferUpperLowerBound);
 router.get("/offers/:id", authMiddleware, OfferController.getOfferById);
 router.delete("/offers/:id", authMiddleware, OfferController.deleteOffer);
 
