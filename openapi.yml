@@ -410,7 +410,7 @@ components:
           maxItems: 2
           items:
             type: number
-        currrencyAmount:
+        currencyAmount:
           type: integer
         cryptoAmount:
           type: integer
