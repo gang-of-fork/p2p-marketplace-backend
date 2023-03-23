@@ -85,4 +85,4 @@ jobs:
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S \
             docker pull ghcr.io/${{ github.repository_owner }}/p2p-backend:latest
             # Replace the container and inject env variables
-            docker-compose -f ./hosting/docker-compose.yml --env-file ./hosting/.env up -d --no-deps plant-exchange-backend
+            docker compose -f ./hosting/docker-compose.yml --env-file ./hosting/.env up -d --no-deps plant-exchange-backend
